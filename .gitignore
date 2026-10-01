@@ -1,0 +1,25 @@
+# Angular
+frontend/**/node_modules/
+frontend/**/.angular/
+frontend/**/dist/
+
+# Spring Boot / Maven
+backend/**/target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Environment
+.env
+
+# Database credentials
+backend/**/src/main/resources/application.properties

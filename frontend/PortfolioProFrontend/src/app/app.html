@@ -1,0 +1,447 @@
+<div class="app-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="logo">
+      <h2>PortfolioPro</h2>
+      <p>Stock Management</p>
+    </div>
+
+    <nav>
+
+      <button
+        [class.active]="activeSection === 'dashboard'"
+        (click)="navigateTo('dashboard')">
+        🏠 Dashboard
+      </button>
+
+      <button
+        [class.active]="activeSection === 'portfolio'"
+        (click)="navigateTo('portfolio')">
+        💼 Portfolio
+      </button>
+
+      <button
+        [class.active]="activeSection === 'stocks'"
+        (click)="navigateTo('stocks')">
+        📈 Stocks
+      </button>
+
+      <button
+        [class.active]="activeSection === 'holdings'"
+        (click)="navigateTo('holdings')">
+        📊 Holdings
+      </button>
+
+      <button
+        [class.active]="activeSection === 'transactions'"
+        (click)="navigateTo('transactions')">
+        💰 Transactions
+      </button>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+      <p>PortfolioPro</p>
+      <small>Stock Management System</small>
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+
+      <div>
+        @if (activeSection === 'dashboard') {
+          <h1>Dashboard</h1>
+          <p>Overview of your investment portfolio</p>
+        }
+
+        @if (activeSection === 'portfolio') {
+          <h1>My Portfolio</h1>
+          <p>Manage your investment portfolios</p>
+        }
+
+        @if (activeSection === 'stocks') {
+          <h1>Stocks</h1>
+          <p>View available stocks and prices</p>
+        }
+
+        @if (activeSection === 'holdings') {
+          <h1>Holdings</h1>
+          <p>Track your current stock holdings</p>
+        }
+
+        @if (activeSection === 'transactions') {
+          <h1>Transactions</h1>
+          <p>View your stock transactions</p>
+        }
+      </div>
+
+      <button class="refresh-btn" (click)="refreshData()">
+        ↻ Refresh
+      </button>
+
+    </header>
+
+
+    <!-- ================= DASHBOARD ================= -->
+
+    @if (activeSection === 'dashboard') {
+
+      <section class="cards">
+
+        <div class="card">
+          <div class="card-icon">₹</div>
+          <div>
+            <p>Portfolio Value</p>
+            <h2>₹0</h2>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">📈</div>
+          <div>
+            <p>Total Stocks</p>
+            <h2>{{ stocks.length }}</h2>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <div>
+            <p>Total Holdings</p>
+            <h2>{{ holdings.length }}</h2>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">💰</div>
+          <div>
+            <p>Transactions</p>
+            <h2>{{ transactions.length }}</h2>
+          </div>
+        </div>
+
+      </section>
+
+
+      <section class="dashboard-grid">
+
+        <div class="content-box">
+
+          <div class="section-heading">
+            <h2>My Portfolio</h2>
+
+            <button
+              class="small-btn"
+              (click)="navigateTo('portfolio')">
+              View All
+            </button>
+          </div>
+
+          @if (portfolios.length === 0) {
+
+            <div class="empty-box">
+              <p>No portfolio available.</p>
+            </div>
+
+          }
+
+          @for (portfolio of portfolios; track portfolio.id) {
+
+            <div class="list-item">
+
+              <div>
+                <h3>{{ portfolio.portfolioName }}</h3>
+                <p>Portfolio ID: {{ portfolio.id }}</p>
+              </div>
+
+              <span class="status">
+                Active
+              </span>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <div class="content-box">
+
+          <div class="section-heading">
+            <h2>Registered Users</h2>
+          </div>
+
+          @for (user of users; track user.id) {
+
+            <div class="list-item">
+
+              <div>
+                <h3>{{ user.name }}</h3>
+                <p>{{ user.email }}</p>
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      </section>
+
+    }
+
+
+    <!-- ================= PORTFOLIO ================= -->
+
+    @if (activeSection === 'portfolio') {
+
+      <section class="page-section">
+
+        <div class="content-box">
+
+          <div class="section-heading">
+            <div>
+              <h2>My Portfolios</h2>
+              <p>Create and manage your portfolios.</p>
+            </div>
+          </div>
+
+
+          <div class="create-box">
+
+            <input
+              type="text"
+              placeholder="Enter portfolio name"
+              (input)="portfolioName = $any($event.target).value"
+            />
+
+            <button
+              class="primary-btn"
+              (click)="createPortfolio()">
+              + Create Portfolio
+            </button>
+
+          </div>
+
+
+          @if (portfolios.length === 0) {
+
+            <div class="empty-box">
+              <p>No portfolios available.</p>
+            </div>
+
+          }
+
+
+          @for (portfolio of portfolios; track portfolio.id) {
+
+            <div class="portfolio-card">
+
+              <div>
+                <span class="portfolio-label">PORTFOLIO</span>
+                <h3>{{ portfolio.portfolioName }}</h3>
+                <p>Portfolio ID: {{ portfolio.id }}</p>
+              </div>
+
+              <span class="status">
+                Active
+              </span>
+
+            </div>
+
+          }
+
+        </div>
+
+      </section>
+
+    }
+
+
+    <!-- ================= STOCKS ================= -->
+
+    @if (activeSection === 'stocks') {
+
+      <section class="page-section">
+
+        <div class="content-box">
+
+          <div class="section-heading">
+            <div>
+              <h2>Available Stocks</h2>
+              <p>Stocks available in the system.</p>
+            </div>
+
+            <span class="count-badge">
+              {{ stocks.length }} Stocks
+            </span>
+          </div>
+
+
+          @if (stocks.length === 0) {
+
+            <div class="empty-box">
+              <p>No stocks available.</p>
+            </div>
+
+          }
+
+
+          @for (stock of stocks; track stock.id) {
+
+            <div class="stock-card">
+
+              <div class="stock-symbol">
+                {{ stock.symbol }}
+              </div>
+
+              <div class="stock-info">
+                <h3>{{ stock.companyName }}</h3>
+                <p>{{ stock.symbol }}</p>
+              </div>
+
+              <div class="stock-price">
+                <span>Current Price</span>
+                <strong>₹{{ stock.price }}</strong>
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      </section>
+
+    }
+
+
+    <!-- ================= HOLDINGS ================= -->
+
+    @if (activeSection === 'holdings') {
+
+      <section class="page-section">
+
+        <div class="content-box">
+
+          <div class="section-heading">
+            <div>
+              <h2>My Holdings</h2>
+              <p>Your currently held stocks.</p>
+            </div>
+
+            <span class="count-badge">
+              {{ holdings.length }} Holdings
+            </span>
+          </div>
+
+
+          @if (holdings.length === 0) {
+
+            <div class="empty-box">
+              <div class="empty-icon">📊</div>
+              <h3>No Holdings Yet</h3>
+              <p>Your stock holdings will appear here.</p>
+            </div>
+
+          }
+
+
+          @for (holding of holdings; track holding.id) {
+
+            <div class="list-item">
+
+              <div>
+                <h3>Holding #{{ holding.id }}</h3>
+                <p>Quantity: {{ holding.quantity }}</p>
+              </div>
+
+              <span class="status">
+                Active
+              </span>
+
+            </div>
+
+          }
+
+        </div>
+
+      </section>
+
+    }
+
+
+    <!-- ================= TRANSACTIONS ================= -->
+
+    @if (activeSection === 'transactions') {
+
+      <section class="page-section">
+
+        <div class="content-box">
+
+          <div class="section-heading">
+            <div>
+              <h2>Transactions</h2>
+              <p>Your stock transaction history.</p>
+            </div>
+
+            <span class="count-badge">
+              {{ transactions.length }} Transactions
+            </span>
+          </div>
+
+
+          @if (transactions.length === 0) {
+
+            <div class="empty-box">
+              <div class="empty-icon">💰</div>
+              <h3>No Transactions Yet</h3>
+              <p>Your buy and sell transactions will appear here.</p>
+            </div>
+
+          }
+
+
+          @for (transaction of transactions; track transaction.id) {
+
+            <div class="transaction-card">
+
+              <div>
+                <span class="transaction-label">
+                  TRANSACTION #{{ transaction.id }}
+                </span>
+
+                <h3>Stock Transaction</h3>
+              </div>
+
+              <div>
+                <p>Quantity</p>
+                <strong>{{ transaction.quantity }}</strong>
+              </div>
+
+              <div>
+                <p>Price</p>
+                <strong>₹{{ transaction.price }}</strong>
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      </section>
+
+    }
+
+  </main>
+
+</div>
